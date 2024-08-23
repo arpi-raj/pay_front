@@ -1,4 +1,5 @@
-const { JWT_SECRET } = require("../config");
+require("dotenv").config();
+const JWT_SECRET = process.env.JWT_SECRET;
 const jwt = require("jsonwebtoken");
 
 const authMiddleware = (req, res, next) => {
@@ -16,8 +17,9 @@ const authMiddleware = (req, res, next) => {
     console.log(decoded);
     next();
   } catch (err) {
+    console.log(err);
     return res.status(401).json({
-      msg:"Invalid or Expired Token"
+      msg: "Invalid or Expired Token",
     });
   }
 };

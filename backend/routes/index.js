@@ -1,7 +1,8 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
-const { JWT_SECRET: key } = require("../config");
+require("dotenv").config();
+const  JWT_SECRET = process.env.JWT_SECRET;
 const { user: User, account: Account } = require("../database/schema");
 const { authMiddleware: auth } = require("../Middlewares/auth");
 const zod = require("zod");
@@ -49,7 +50,7 @@ router.post("/signup", async (req, res) => {
       fName: body.fName,
     };
 
-    const token = jwt.sign(payload, key, { expiresIn: "1h" });
+    const token = jwt.sign(payload, JWT_SECRET, { expiresIn: "1h" });
 
     const ser = await User.create(body);
     console.log(ser);
@@ -73,7 +74,7 @@ router.post("/signin", async (req, res) => {
   try {
     const body = req.body;
 
-    console.log(body.password);
+    console.log(JWT_SECRET);
 
     const { success } = signinSchema.safeParse(body);
     if (!success) {
@@ -106,9 +107,9 @@ router.post("/signin", async (req, res) => {
       fName: user.fName,
     };
 
-    console.log(key);
+    console.log(JWT_SECRET);
 
-    const token = jwt.sign(payload, key, { expiresIn: "1h" });
+    const token = jwt.sign(payload, JWT_SECRET, { expiresIn: "1h" });
 
     console.log(token);
 
