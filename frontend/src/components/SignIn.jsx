@@ -51,6 +51,14 @@ export default function SignIn() {
           >
             Sign In
           </button>
+          <button
+            onClick={async () => {
+              nav('/forgotPass')
+            }}
+            className="w-full justify-center bg-green-500 text-white font-bold py-2 px-4 rounded mt-4 hover:bg-green-600 transition duration-200"
+          >
+            Forgot Password
+          </button>
           <div className="mt-4 text-center">
             <p>
               Not a member yet?{" "}

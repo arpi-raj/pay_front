@@ -1,8 +1,29 @@
-export default function AppBar({user}) {
+import { useNavigate } from "react-router-dom";
+export default function AppBar({ user }) {
+  const nav = useNavigate()
   return (
     <>
       <div className="flex justify-between items-center px-2 py-1">
-        <div className="ml-2 mr-0 pr-2 pl-0 font-bold text-xl">Hello, {user.fName}</div>
+        <div className="flex ml-2 mr-0 pr-2 pl-0 font-bold text-xl">
+          Hello, {user.fName}{" "}
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            className="size-4 ml-1 cursor-pointer duration-100"
+            onClick={()=>{
+              nav("/edit")
+            }}
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.832 19.82a4.5 4.5 0 0 1-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487Zm0 0L19.5 7.125"
+            />
+          </svg>
+        </div>
         <div className="font-bold text-3xl">Pay_Front</div>
       </div>
     </>
