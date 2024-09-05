@@ -1,8 +1,9 @@
 const express = require("express");
+const { sendOTP, generateOTP } = require("../Middlewares/otp");
 const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
-const  JWT_SECRET = process.env.JWT_SECRET;
+const JWT_SECRET = process.env.JWT_SECRET;
 const { user: User, account: Account } = require("../database/schema");
 const { authMiddleware: auth } = require("../Middlewares/auth");
 const zod = require("zod");
@@ -121,6 +122,50 @@ router.post("/signin", async (req, res) => {
     res.json({
       msg: "Internal Error Occured",
     });
+  }
+});
+
+var generatedOtp;
+
+router.post("/sendOtp", (req, res) => {
+  try {
+    const email = req.body.email;
+    generatedOtp = generateOTP();
+    sendOTP(email, generatedOtp);
+
+    res.status(200).json({
+      msg: "Otp Sent Successfully",
+    });
+  } catch (e) {
+    res.status(404).json({
+      msg: "Error Sending Otp",
+    });
+    console.log(e.message);
+  }
+});
+
+router.post("/verify", async (req, res) => {
+  try {
+    const {email} = req.body;
+    const otpHere = req.body.otp;
+    const {pass} = req.body.pass;
+    if (otpHere != generatedOtp) {
+      res.status(404).json({
+        msg: "Otp verification failed Try Again",
+      });
+      console.log("gen " + generatedOTP);
+      console.log("OtpHere " + otpHere);
+    } else {
+      await User.updateOne({ email }, { $set: { password: pass } });
+      res.status(200).json({
+        msg: "Password Changed Succesfully",
+      });
+    }
+  } catch (e) {
+    res.status(500).json({
+      msg: "Internal Server Error",
+    });
+    console.log(e.message);
   }
 });
 
