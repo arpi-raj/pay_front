@@ -14,12 +14,15 @@ userRouter.put("/update", auth, async (req, res) => {
     lName: zod.string().optional(),
   });
 
-  const { success } = updateBody.safeParse(body);
-
-  if (!success) {
-    res.json({
-      msg: "Incorrect Inputs",
-    });
+  try {
+    const { success } = updateBody.safeParse(body);
+    if (!success) {
+      res.json({
+        msg: "Incorrect Inputs",
+      });
+    }
+  } catch (e) {
+    console.log(e.message);
   }
 
   try {
@@ -39,7 +42,9 @@ userRouter.get("/info", auth, async (req, res) => {
     const email = req.user.email;
     const user = await User.findOne({ email });
     res.json({
-      user,
+      email: user.email,
+      fName: user.fName,
+      lName: user.lName,
     });
   } catch (e) {
     res.status(403).json({

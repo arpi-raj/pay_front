@@ -14,7 +14,7 @@ export const fetchData = async (token) => {
         authorization: `Bearer ${token}`,
       },
     });
-    return response.data.user; // Return the user data if successful
+    return response.data; // Return the user data if successful
   } catch (e) {
     if (e.response && e.response.status === 401) {
       // If a 401 error occurs, return a specific value
@@ -38,6 +38,7 @@ export default function DashBoard() {
       const userData = await fetchData(token);
       if (userData && userData !== "unauthorized") {
         setUser(userData);
+        console.log(user)
       }
     };
 
