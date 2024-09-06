@@ -1,23 +1,57 @@
 import InputBar from "./InputBar";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 export default function Forgot() {
   const [email, setEmail] = useState("");
+  const [pass, setPass] = useState("");
   const [otpSent, setOtpSent] = useState(false);
+  const [msg, setMsg] = useState("");
   const [otp, setOtp] = useState("");
 
   const nav = useNavigate();
 
-  const handleVerify = () => {
+  const handleVerify = async () => {
     // Logic for sending the verification code to the provided email
     console.log("Email:", email);
     setOtpSent(true);
+    try {
+      const response = await axios.post(
+        "http://localhost:3000/api/v1/sendOtp",
+        {
+          email: email,
+        }
+      );
+      if (response.status === 200) {
+        console.log(response.data);
+        setMsg(response.data.msg);
+        alert(response.data.msg);
+      }
+    } catch (e) {
+      setMsg(e.data.msg);
+      alert(e.data.msg);
+    }
   };
 
-  const handleOtpSubmit = () => {
-    // Logic for verifying the OTP
+  const handleOtpSubmit = async () => {
     console.log("OTP:", otp);
+    try {
+      const response = await axios.post("http://localhost:3000/api/v1/verify", {
+        email: email,
+        pass: pass,
+        otp: otp,
+      });
+      if (response.status === 200) {
+        console.log(response.data);
+        setMsg(response.data.msg);
+        alert(response.data.msg);
+        nav("/signin");
+      }
+    } catch (e) {
+      setMsg(e.response.data.msg);
+      alert(e.response.data.msg + " Try Again, after some time");
+    }
   };
 
   const handleBack = () => {
@@ -32,7 +66,9 @@ export default function Forgot() {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 px-4">
       <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-sm">
-        <h2 className="text-2xl font-semibold text-center mb-4">Forgot Password</h2>
+        <h2 className="text-2xl font-semibold text-center mb-4">
+          Forgot Password
+        </h2>
         {!otpSent ? (
           <>
             <InputBar
@@ -56,10 +92,21 @@ export default function Forgot() {
         ) : (
           <>
             <InputBar
+              onChange={(e) => setEmail(e.target.value)}
+              label="Email"
+              placeholder="johnExample@gmail.com"
+            />
+            <InputBar
               onChange={(e) => setOtp(e.target.value)}
               label="OTP"
               placeholder="Enter OTP"
               className="mt-4"
+            />
+
+            <InputBar
+              onChange={(e) => setPass(e.target.value)}
+              label="New Password"
+              placeholder="strongPassword"
             />
             <button
               onClick={handleOtpSubmit}

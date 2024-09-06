@@ -131,6 +131,7 @@ router.post("/sendOtp", (req, res) => {
   try {
     const email = req.body.email;
     generatedOtp = generateOTP();
+    console.log(generatedOtp);
     sendOTP(email, generatedOtp);
 
     res.status(200).json({
@@ -146,19 +147,26 @@ router.post("/sendOtp", (req, res) => {
 
 router.post("/verify", async (req, res) => {
   try {
-    const {email} = req.body;
-    const otpHere = req.body.otp;
-    const {pass} = req.body.pass;
-    if (otpHere != generatedOtp) {
+    const { email, otp, pass } = req.body;
+
+    if (!pass || pass === "") {
       res.status(404).json({
-        msg: "Otp verification failed Try Again",
+        msg: "Password not Valid",
       });
-      console.log("gen " + generatedOTP);
-      console.log("OtpHere " + otpHere);
+    }
+
+    // Ensure `generatedOtp` is fetched from where it was stored after being generated
+    if (otp != generatedOtp) {
+      res.status(404).json({
+        msg: "Otp verification failed. Try Again",
+      });
+      console.log("Generated OTP: " + generatedOtp);
+      console.log("Entered OTP: " + otp);
     } else {
+      // Assuming you are storing password as plain text here, ensure it's hashed in real applications.
       await User.updateOne({ email }, { $set: { password: pass } });
       res.status(200).json({
-        msg: "Password Changed Succesfully",
+        msg: "Password Changed Successfully",
       });
     }
   } catch (e) {
