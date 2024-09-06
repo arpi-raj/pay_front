@@ -64,9 +64,12 @@ function Send() {
         >
           {loading ? "Sending..." : "Send"}
         </button>
-        <button onClick={()=>{
-          nav("/dashboard")
-        }} className="w-full my-2 px-4 py-2 bg-green-500 text-white font-semibold rounded-lg hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-blue-300 disabled:bg-blue-300">
+        <button
+          onClick={() => {
+            nav("/dashboard");
+          }}
+          className="w-full my-2 px-4 py-2 bg-green-500 text-white font-semibold rounded-lg hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-blue-300 disabled:bg-blue-300"
+        >
           Back
         </button>
       </div>

@@ -28,7 +28,7 @@ export default function Edit() {
       if (fName.trim() !== "") requestBody.fName = fName;
       if (lName.trim() !== "") requestBody.lName = lName;
       if (password.trim() !== "") requestBody.password = password;
-    
+
       // Proceed only if there is something to update
       if (Object.keys(requestBody).length === 0) {
         console.log("No fields to update");
@@ -46,9 +46,15 @@ export default function Edit() {
           },
         }
       );
+      if (response.status === 200) {
+        alert("Update Successful");
+        nav("/dashboard");
+      }
       console.log("User update successful:", response.data);
     } catch (error) {
       console.error("Error updating user:", error);
+      alert("Try after some time "+ e.response.data.msg)
+      nav('/dashboard')
     }
   };
 

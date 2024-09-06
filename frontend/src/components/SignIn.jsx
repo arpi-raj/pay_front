@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import {useState} from "react"
+import { useState } from "react";
 import Heading from "./Heading";
 import InputBar from "./InputBar";
 import axios from "axios";
@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 export default function SignIn() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const nav = useNavigate()
+  const nav = useNavigate();
   return (
     <>
       <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
@@ -31,7 +31,7 @@ export default function SignIn() {
           />
           <button
             onClick={async () => {
-              try{
+              try {
                 const response = await axios.post(
                   "http://localhost:3000/api/v1/signin",
                   {
@@ -39,12 +39,12 @@ export default function SignIn() {
                     password,
                   }
                 );
-                console.log(response.data)
+                console.log(response.data);
                 localStorage.setItem("token", response.data.token);
-                nav("/DashBoard")
-              }catch(e){
-                console.log(e.msg)
-                alert("An Internal Error Occured")
+                nav("/DashBoard");
+              } catch (e) {
+                console.log(e.msg);
+                alert(e.response.data.msg);
               }
             }}
             className="w-full justify-center bg-blue-500 text-white font-bold py-2 px-4 rounded mt-4 hover:bg-blue-600 transition duration-200"
@@ -53,7 +53,7 @@ export default function SignIn() {
           </button>
           <button
             onClick={async () => {
-              nav('/forgotPass')
+              nav("/forgotPass");
             }}
             className="w-full justify-center bg-green-500 text-white font-bold py-2 px-4 rounded mt-4 hover:bg-green-600 transition duration-200"
           >
